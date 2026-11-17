@@ -14,7 +14,7 @@ PASTA_TEMP = "./temp_mixtures"
 PASTA_SAIDA = "./estimativas_benchmark"
 
 # Modelos que você deseja comparar (ex: quantizado, padrão e fine-tunado)
-MODELOS = ["mdx_q", "htdemucs", "htdemucs_ft", "mdx_extra_q", "mdx", "mdx_extra", "hdemucs_mmi"]
+MODELOS = ["umx", "umxhq"]
 # =================================================
 
 def preparar_ambiente():
@@ -40,15 +40,17 @@ def rodar_benchmark():
             caminho_mix_original = os.path.join(PASTA_TESTES, musica, "mixture.wav")
             
             # Copiamos o mixture.wav para temp/NomeDaMusica.wav 
-            # Isso força o Demucs a nomear a pasta de saída corretamente para o museval
+            # Isso força o Open-Unmix a nomear a pasta de saída corretamente para o museval
             caminho_mix_temp = os.path.join(PASTA_TEMP, f"{musica}.wav")
             shutil.copy(caminho_mix_original, caminho_mix_temp)
             
-            # Comando do Demucs
+            pasta_estimativas_modelo = os.path.join(PASTA_SAIDA, modelo)
+            
+            # Comando do Open-Unmix
             comando = [
-                "demucs", 
-                "-n", modelo, 
-                "-o", PASTA_SAIDA, 
+                "umx", 
+                "--model", modelo, 
+                "--outdir", pasta_estimativas_modelo, 
                 caminho_mix_temp
             ]
             
